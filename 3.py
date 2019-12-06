@@ -77,3 +77,32 @@ model.predict_classes(X_test)
 predictions = model.predict_classes(X_test)
 print(classification_report(y_test,predictions))
 ###################################################################3
+
+#best model
+model = Sequential()
+
+model.add(Dense(9,activation='relu'))#relu
+model.add(Dropout(0.2))
+model.add(Dense(9,activation='relu'))
+model.add(Dense(9,activation='relu'))
+model.add(Dense(9,activation='relu'))
+model.add(Dense(5,activation='relu'))
+
+#binary classification = sigmoid
+model.add(Dense(1,activation='sigmoid')) #somewhere between 0 and 1
+rms = tf.keras.optimizers.RMSprop(0.001)
+model.compile(loss='mse',optimizer=rms, metrics=['accuracy'])
+
+early_stop = EarlyStopping(monitor='val_loss',mode='min',verbose=1,patience=15)
+
+model.fit(x=X_train,y=y_train,epochs=600,validation_data=(X_test,y_test),callbacks=[early_stop])
+
+model_loss = pd.DataFrame(model.history.history)
+model_loss.plot()
+
+model.predict_classes(X_test)
+
+predictions = model.predict_classes(X_test)
+print(classification_report(y_test,predictions))
+
+model.save("3.h")
