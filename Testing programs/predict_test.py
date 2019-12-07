@@ -26,7 +26,7 @@ def predict(model, class_names, img, true_label):
     prediction = model.predict(img)
     #Determine what the predicted label is
     predicted_label = np.argmax(prediction[0])
-    img = img.reshape(1,28,28)
+    
     plot(class_names, prediction, true_label, predicted_label, img[0])
     plt.show()
 
