@@ -8,7 +8,7 @@ def main():
      x_test, y_test = data
      print(f"--Load Model {sys.argv[2]}--")
      #Load the model that should be in sys.argv[2]
-     model = None
+     model = tf.keras.models.load_model('/home/don/Asg4/notMNIST.h5')
      pick = input(f"Pick test_image (0 -> {len(x_test)-1}):")
      while pick.isdigit() and int(pick) >= 0 and int(pick) < len(x_test):
         pick = int(pick)
@@ -22,9 +22,11 @@ def main():
 def predict(model, class_names, img, true_label):
     img = np.array([img])
     #Replace these two lines with code to make a prediction
-    prediction = [1/10,1/10,1/10,1/10,1/10,1/10,1/10,1/10,1/10,1/10]
+    img = img.reshape(1,28,28,1)
+    prediction = model.predict(img)
     #Determine what the predicted label is
-    predicted_label = 0
+    predicted_label = np.argmax(prediction[0])
+    
     plot(class_names, prediction, true_label, predicted_label, img[0])
     plt.show()
 
@@ -47,7 +49,7 @@ def check_args():
      elif sys.argv[1] == "notMNIST":
           print("--Dataset notMNIST--")
           class_names = ["A","B","C","D","E","F","G","H","I","J"]
-          with np.load("notMNIST.npz", allow_pickle=True) as f:
+          with np.load("/home/don/Asg4/notMNIST.npz", allow_pickle=True) as f:
             x_test, y_test = f['x_test'], f['y_test']
           data = (x_test, y_test)
      else:
@@ -70,7 +72,7 @@ def plot(class_names, prediction, true_label, predicted_label, img):
         color = 'blue'
     else:
         color = 'red'
-    plt.xlabel("{} {:2.0f}% ({})".format(class_names[predicted_label],100*np.max(prediction),class_names[true_label]),color=color)
+        plt.xlabel("{} {:2.0f}% ({})".format(class_names[predicted_label],100*np.max(prediction),class_names[true_label]),color=color)
     plt.subplot(1,2,2)
     plt.grid(False)
     plt.xticks(range(10))
